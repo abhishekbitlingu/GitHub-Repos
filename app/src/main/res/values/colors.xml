@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#20A0F1</color>
+    <color name="colorPrimaryDark">#1C71A6</color>
+    <color name="colorAccent">#0F3D5A</color>
+
+    <color name="ghost_white">#F9F9FB</color>
+
+    <color name="item_color_title">#060606</color>
+    <color name="item_color_time">#615C5C</color>
+    <color name="item_color_desc">#615C5C</color>
+    <color name="item_color_like">#676767</color>
+    <color name="item_color_shadow">#c9f2f3</color>
+    <color name="item_color_stars">#76b5ff</color>
+    <color name="item_color_watchers">#ffdd00</color>
+    <color name="item_color_forks">#a07aea</color>
+    <color name="item_color_star_text">#a2b4ca</color>
+    <color name="item_color_line">#ecf2f9</color>
+    <color name="bg_ripple">#66aeaeae</color>
+
+
+    <color name="color_blue">#54c5f8</color>
+    <color name="color_orange">#f88909</color>
+    <color name="color_yellow">#f0db4f</color>
+    <color name="color_java">#f89820</color>
+    <color name="color_kotlin">#a4c639</color>
+    <color name="color_dart">#0075BA</color>
+    <color name="color_javaScript">#f0db4f</color>
+    <color name="color_css">#FF0000</color>
+
+</resources>
