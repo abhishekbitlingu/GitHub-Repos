@@ -17,7 +17,7 @@ public interface GithubDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRepositories(List<GitHubRepositoryModel> githubEntities);
 
-    @Query("SELECT * FROM `GitHubRepositoryModel`")
+    @Query("SELECT * FROM `GitHubRepositoryModel` ORDER BY page ASC")
     LiveData<List<GitHubRepositoryModel>> getRepositoriesByPage();
 
     @Query("SELECT count(*) FROM `GitHubRepositoryModel`")

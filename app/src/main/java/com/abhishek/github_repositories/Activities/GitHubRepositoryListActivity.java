@@ -40,8 +40,6 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialiseView();
-
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
@@ -49,9 +47,9 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
                 15, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build();
-
         WorkManager.getInstance(this)
                 .enqueue(request);
+        initialiseView();
     }
 
     private void initialiseView() {
@@ -79,8 +77,12 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
     }
 
     public void prepareDataAndRefreshView() {
+        displayLoader();
         mDbInstance.githubDao().getRepositoriesByPage().observe(this,
-                repositoryModelList -> githubListAdapter.setItems(repositoryModelList));
+                repositoryModelList -> {
+                    hideLoader();
+                    githubListAdapter.setItems(repositoryModelList);
+                });
     }
 
     private void displayLoader() {
