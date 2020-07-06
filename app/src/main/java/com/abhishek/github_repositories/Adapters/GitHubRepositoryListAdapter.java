@@ -49,9 +49,9 @@ public class GitHubRepositoryListAdapter extends RecyclerView.Adapter<GitHubRepo
     }
 
     public void setItems(List<GitHubRepositoryModel> items) {
-        int startPosition = this.items.size();
+        this.items.clear();
         this.items.addAll(items);
-        notifyItemRangeChanged(startPosition, items.size());
+        notifyDataSetChanged();
     }
 
     @Override

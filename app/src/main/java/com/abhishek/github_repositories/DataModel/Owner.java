@@ -3,8 +3,10 @@ package com.abhishek.github_repositories.DataModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Owner implements Parcelable {
 
     private String login;

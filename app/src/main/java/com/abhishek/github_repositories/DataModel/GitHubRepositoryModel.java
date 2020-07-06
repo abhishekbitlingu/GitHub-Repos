@@ -1,17 +1,21 @@
 package com.abhishek.github_repositories.DataModel;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import com.abhishek.github_repositories.DataBase.TimestampConverter;
 import com.google.gson.annotations.SerializedName;
 
-//@Entity
+@Entity
 public class GitHubRepositoryModel implements Parcelable {
 
-//    @NonNull
-//    @PrimaryKey
+    @NonNull
+    @PrimaryKey
     private Long id;
 
     private Long page;
@@ -23,7 +27,7 @@ public class GitHubRepositoryModel implements Parcelable {
     @SerializedName("full_name")
     private String fullName;
 
-//    @Embedded
+    @Embedded
     private Owner owner;
 
     @SerializedName("html_url")
@@ -34,7 +38,7 @@ public class GitHubRepositoryModel implements Parcelable {
     @SerializedName("contributors_url")
     private String contributorsUrl;
 
-//    @TypeConverters(TimestampConverter.class)
+    @TypeConverters(TimestampConverter.class)
     @SerializedName("created_at")
     private String createdAt;
 

@@ -8,6 +8,8 @@ import com.abhishek.github_repositories.AppConstants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +24,7 @@ public class GitHubAPIController implements Callback<GitHubResponseModel> {
         this.listener = listener;
     }
     public void loadRepositories(Long page) {
+        Log.d(TAG, "loadRepositories: page = " + page);
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -45,7 +48,7 @@ public class GitHubAPIController implements Callback<GitHubResponseModel> {
             if (response.body() != null) {
                 GitHubResponseModel responseModel = response.body();
                 if (!responseModel.getRepositories().isEmpty()) {
-                    listener.onSuccessResponse(response.body().getRepositories(), responseModel.getTotalCount());
+                    listener.onSuccessResponse(responseModel.getRepositories(), responseModel.getTotalCount());
                 }
             }
         } else {

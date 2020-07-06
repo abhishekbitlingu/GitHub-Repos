@@ -17,7 +17,7 @@ public interface AppConstants {
     String QUERY_PARAM_VALUE = "android";
 
 
-    String PAGE_MAX_SIZE = "20";
+    String PAGE_MAX_SIZE = "30";
     String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     String INTENT_POST = "intent_post";

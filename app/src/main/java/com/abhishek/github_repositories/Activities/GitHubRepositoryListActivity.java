@@ -2,17 +2,23 @@ package com.abhishek.github_repositories.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import androidx.work.Worker;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.abhishek.github_repositories.Adapters.GitHubRepositoryListAdapter;
+import com.abhishek.github_repositories.DataBase.AppDatabase;
 import com.abhishek.github_repositories.DataModel.GitHubRepositoryModel;
-import com.abhishek.github_repositories.Network.GitHubAPIController;
-import com.abhishek.github_repositories.Network.GitHubAPIResponseListener;
+import com.abhishek.github_repositories.Network.WorkerManager.RepositoryDownloadWorker;
 import com.abhishek.github_repositories.Utils.AppUtils;
 import com.abhishek.github_repositories.Utils.NavigatorUtils;
 import com.abhishek.github_repositories.Utils.ShareUtils;
@@ -21,12 +27,13 @@ import com.abhishek.github_repositories.custom.recyclerview.RecyclerViewPaginato
 import com.abhishek.github_repositories.databinding.ActivityGithubRepositoryListBinding;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GitHubRepositoryListActivity extends AppCompatActivity implements RecyclerLayoutClickListener {
     private Long pageNumber = 0L;
     private ActivityGithubRepositoryListBinding binding;
     private GitHubRepositoryListAdapter githubListAdapter;
-    private GitHubAPIController apiController;
+    private AppDatabase mDbInstance;
     private Long totalRepoCount = 0L;
 
 
@@ -34,6 +41,17 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initialiseView();
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        WorkRequest request = new PeriodicWorkRequest.Builder(RepositoryDownloadWorker.class,
+                15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this)
+                .enqueue(request);
     }
 
     private void initialiseView() {
@@ -41,6 +59,7 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
         setContentView(binding.getRoot());
         setSupportActionBar(binding.mainToolbar.toolbar);
 
+        mDbInstance = AppDatabase.getInstance(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         githubListAdapter = new GitHubRepositoryListAdapter(getApplicationContext(), this);
         binding.recyclerView.setAdapter(githubListAdapter);
@@ -52,42 +71,16 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
 
             @Override
             public void loadMore() {
-                displayLoader();
-                apiController.loadRepositories(++pageNumber);
+                Log.d(GitHubRepositoryListActivity.class.getSimpleName(), "loadMore: called");
+                prepareDataAndRefreshView();
             }
         });
-
-        /* This is to handle configuration changes:
-         * during configuration change, when the activity
-         * is recreated, we check if the viewModel
-         * contains the list data. If so, there is no
-         * need to call the api or load data from cache again */
         prepareDataAndRefreshView();
     }
 
     public void prepareDataAndRefreshView() {
-        // TODO call API to get repositories and show loader
-        displayLoader();
-        apiController = new GitHubAPIController(new GitHubAPIResponseListener() {
-            @Override
-            public void onSuccessResponse(List<GitHubRepositoryModel> repositoryModelList, Long totalCount) {
-                totalRepoCount = totalCount;
-                if (!repositoryModelList.isEmpty()) {
-                    hideEmptyView();
-                    githubListAdapter.setItems(repositoryModelList);
-                } else {
-                    displayEmptyView();
-                }
-            }
-
-            @Override
-            public void onErrorResponse() {
-                if (githubListAdapter.getItemCount() == 0) {
-                    displayEmptyView();
-                }
-            }
-        });
-        apiController.loadRepositories(++pageNumber);
+        mDbInstance.githubDao().getRepositoriesByPage().observe(this,
+                repositoryModelList -> githubListAdapter.setItems(repositoryModelList));
     }
 
     private void displayLoader() {
