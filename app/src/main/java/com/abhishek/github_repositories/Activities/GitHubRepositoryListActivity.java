@@ -1,19 +1,17 @@
 package com.abhishek.github_repositories.Activities;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-import androidx.work.Worker;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import com.abhishek.github_repositories.Adapters.GitHubRepositoryListAdapter;
 import com.abhishek.github_repositories.DataBase.AppDatabase;
@@ -26,11 +24,9 @@ import com.abhishek.github_repositories.custom.recyclerview.RecyclerLayoutClickL
 import com.abhishek.github_repositories.custom.recyclerview.RecyclerViewPaginator;
 import com.abhishek.github_repositories.databinding.ActivityGithubRepositoryListBinding;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class GitHubRepositoryListActivity extends AppCompatActivity implements RecyclerLayoutClickListener {
-    private Long pageNumber = 0L;
     private ActivityGithubRepositoryListBinding binding;
     private GitHubRepositoryListAdapter githubListAdapter;
     private AppDatabase mDbInstance;
@@ -81,7 +77,10 @@ public class GitHubRepositoryListActivity extends AppCompatActivity implements R
         mDbInstance.githubDao().getRepositoriesByPage().observe(this,
                 repositoryModelList -> {
                     hideLoader();
-                    githubListAdapter.setItems(repositoryModelList);
+                    if (!repositoryModelList.isEmpty()) {
+                        hideEmptyView();
+                        githubListAdapter.setItems(repositoryModelList);
+                    }
                 });
     }
 

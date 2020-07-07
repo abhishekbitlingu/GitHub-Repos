@@ -1,10 +1,10 @@
 package com.abhishek.github_repositories.Activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.abhishek.github_repositories.AppConstants;
 import com.abhishek.github_repositories.DataModel.GitHubRepositoryModel;

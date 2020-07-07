@@ -1,7 +1,6 @@
 package com.abhishek.github_repositories.Network.WorkerManager;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -34,7 +33,6 @@ public class RepositoryDownloadWorker extends Worker {
                 for (GitHubRepositoryModel repository: repositoryModelList) {
                     repository.setPage(pageNumber);
                 }
-
                 new Thread(() -> {
                     githubDao.insertRepositories(repositoryModelList);
                     if(totalCount > githubDao.getTotalCount()) {
@@ -43,8 +41,9 @@ public class RepositoryDownloadWorker extends Worker {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        controller.loadRepositories(++pageNumber);
                     }
-                    controller.loadRepositories(++pageNumber);
+
                 }).start();
             }
 

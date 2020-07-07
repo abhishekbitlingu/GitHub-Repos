@@ -12,7 +12,6 @@ import android.os.Build;
 import android.view.View;
 import android.webkit.WebSettings;
 
-
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
